@@ -7,18 +7,23 @@ import google.generativeai as genai
 import os
 import json
 from datetime import datetime
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'a-very-secret-key-that-is-long-and-random' 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'a-very-secret-key-that-is-long-and-random') 
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI', 'sqlite:///users.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
-os.environ['GEMINI_API_KEY'] = 'AIzaSyC9OYvhLULWHC_rE2fnYliIicc12IVwN5Y'
-genai.configure(api_key=os.environ['GEMINI_API_KEY'])
+# Get Gemini API key from environment variable
+gemini_api_key = os.getenv('GEMINI_API_KEY', 'AIzaSyC9OYvhLULWHC_rE2fnYliIicc12IVwN5Y')
+genai.configure(api_key=gemini_api_key)
 
 
 class User(UserMixin, db.Model):
