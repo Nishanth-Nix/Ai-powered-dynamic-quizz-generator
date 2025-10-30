@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AI Quiz Generator{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .navbar { background-color: #0b1220; padding: 0.5rem 2rem; box-shadow: 0 8px 20px rgba(0,0,0,0.35); margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1f2937; }
+        .navbar a { text-decoration: none; color: #e5e7eb; font-weight: bold; padding: 0.5rem; }
+        .navbar a:hover { color: #a78bfa; }
+        .navbar .brand { font-size: 1.5rem; color: #e5e7eb; }
+        .flashes { list-style: none; padding: 0; margin: 0 0 1rem 0; }
+        .flashes li { padding: 1rem; border-radius: 8px; margin-bottom: 1rem; }
+        .flashes .success { background-color: rgba(16, 185, 129, 0.15); color: #d1fae5; border: 1px solid #10b981; }
+        .flashes .error { background-color: rgba(239, 68, 68, 0.12); color: #fecaca; border: 1px solid #ef4444; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="{{ url_for('index') }}" class="brand">AI Quiz App</a>
+        <div>
+            {% if current_user.is_authenticated %}
+                <span style="margin-right: 1rem;">Hello, {{ current_user.username }}</span>
+                    <a href="{{ url_for('history') }}">History</a> 
+                    <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                    <a href="{{ url_for('index') }}">Create Quiz</a>
+                    <a href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+                <a href="{{ url_for('register') }}">Register</a>
+            {% endif %}
+        </div>
+    </nav>
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="container" style="max-width: 800px; margin: 0 auto 1rem auto; padding: 0 2.5rem;">
+                    <ul class="flashes">
+                    {% for category, message in messages %}
+                        <li class="{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
