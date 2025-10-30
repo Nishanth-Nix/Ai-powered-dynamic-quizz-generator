@@ -22,7 +22,9 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
 # Get Gemini API key from environment variable
-gemini_api_key = os.getenv('GEMINI_API_KEY', 'AIzaSyC9OYvhLULWHC_rE2fnYliIicc12IVwN5Y')
+gemini_api_key = os.getenv('GEMINI_API_KEY')
+if not gemini_api_key:
+    raise ValueError("GEMINI_API_KEY environment variable is not set. Please add it to your .env file.")
 genai.configure(api_key=gemini_api_key)
 
 
